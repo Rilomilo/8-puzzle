@@ -3,94 +3,55 @@ interface Pos {
     c:number
 }
 
-export default class Status{
-    private data:number[];
-    private depth:number;
-    public parent_status:Status|null;
+export default class Node{
+    public data:number[];
+    public depth:number; //g
+    private _f: number | undefined;
+    public parent_status:Node|null;
 
-    constructor(a: number[], depth: number, parent: Status | null) {
-        this.data=Array.from(a);
+    constructor(data: number[], depth: number, parent: Node | null) {
+        this.data=Array.from(data);
         this.depth=depth;
         this.parent_status=parent;
     }
 
-    public static copyConstructor(s:Status,depth:number,parent:Status):Status{
-        let s1=new Status(s.data, depth, parent);
-        return s1;
-    }
-
-    public get(r:number,c:number):number{
-        return this.data[(r-1)*3+(c-1)];
-    }
-
-    public set(r:number,c:number,n:number){
-        this.data[(r-1)*3+(c-1)]=n;
-    }
-
-    /**
-     * 查找指定位置周围的空位位置
-     * @param r0 行
-     * @param c0 列
-     */
-    public findZero(r0:number,c0:number):Pos|null{
-        let offset=[[-1,0],[1,0],[0,-1],[0,1]];
-
-        for(let i=0;i<4;i++){
-            let r=r0+offset[i][0];
-            let c=c0+offset[i][1];
-            if(this.get(r,c)==0){
-                return {r,c};
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * 移动位于r行c列的数字
-     * @param r0
-     * @param c0
-     */
-    public move(r0:number,c0:number):Status{
-        let s=Status.copyConstructor(this,this.depth+1,this);
-        let {r,c}=s.findZero(r0,c0)!;
-        let t=s.get(r,c);
-        s.set(r,c,this.get(r0,c0));
-        s.set(r0,c0,t);
-        return s;
-    }
-
-    private getInPlaceCount():number{
-        let in_place=[1,2,3,8,0,4,7,6,5];
-        let cnt=0;
-        for(let i=0;i<in_place.length;i++){
-            if(in_place[i]==0) continue;
-            if(this.data[i]==in_place[i]){
-                cnt++;
-            }
-        }
-        return cnt;
-    }
-
-    public isTargetStatus():boolean{
-        if(this.getInPlaceCount()==8){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
     public print(){
-        console.log(this.data[0],this.data[1],this.data[2])
-        console.log(this.data[3],this.data[4],this.data[5])
-        console.log(this.data[6],this.data[7],this.data[8])
-        console.log("f=",this.f)
+        console.log("--------------------------------------");
+        console.log("|",this.data[0],this.data[1],this.data[2],"|");
+        console.log("|",this.data[3],this.data[4],this.data[5],"|");
+        console.log("|",this.data[6],this.data[7],this.data[8],"|");
+        console.log("f=",this.f,"depth=",this.depth);
+        console.log("dump=",Node.dump(this.data));
+
+    }
+
+    /**
+     * 将给定的状态转化为数字
+     * @param data
+     */
+    public static dump(data:number[]):number{
+        let t=0;
+        for(let i=0;i<9;i++){
+            t=t*10+data[i];
+        }
+        return t;
     }
 
     /**
      * 计算f值
      */
     get f():number{
-        return this.depth+8-this.getInPlaceCount();
+        if(!this._f){
+            let target=[[1,1],[0,0],[0,1],[0,2],[1,2],[2,2],[2,1],[2,0],[1,0]];
+            let sum=0;
+            for(let i=0;i<3;i++){
+                for(let j=0;j<3;j++){
+                    sum+=Math.abs(target[this.data[i*3+j]][0]-i);
+                    sum+=Math.abs(target[this.data[i*3+j]][1]-j);
+                }
+            }
+            this._f=sum+this.depth;
+        }
+        return this._f;
     }
 }

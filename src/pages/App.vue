@@ -24,8 +24,11 @@
 
         <div class="button-panel">
             <div v-if="mode==0" >
-                <el-button type="primary" @click="previous">上一步</el-button>
-                <el-button type="primary" @click="next">下一步</el-button>
+                <div>{{index+1}}/{{node_ls.length}}</div>
+                <div>
+                    <el-button type="primary" @click="previous">上一步</el-button>
+                    <el-button type="primary" @click="next">下一步</el-button>
+                </div>
             </div>
             <div v-else-if="mode==1">
                 <el-button type="primary" @click="calculate">确定</el-button>
@@ -45,11 +48,9 @@ export default {
     data:function () {
         return {
             mode:true,// 0为演示，1为编辑，2为正在计算
-            // input_data:[2,8,3,1,6,4,7,0,5],
-            input_data:[1,2,3,4,5,7,6,0,8],// 会飞的
-            // input_data:[8,1,2,7,0,3,6,5,4]
-            // input_data:[6,0,3,7,1,2,4,5,8],
-            // input_data:[1,4,7,5,3,0,2,6,8],
+            // input_data:[1,2,3,4,5,7,6,0,8],// 会飞的
+            // input_data:[8,1,2,7,0,3,6,5,4],
+            input_data:[6,0,3,7,1,2,4,5,8],
             cells:[
                 {top:"",left:""},
                 {top:"",left:""},
@@ -61,7 +62,7 @@ export default {
                 {top:"",left:""},
                 {top:"",left:""},
             ],
-            status_ls:[],
+            node_ls:[],
             index:0
         }
     },
@@ -85,7 +86,7 @@ export default {
             this.mode=2
             setTimeout(()=>{
                 this.mode=false;
-                this.status_ls=new SearchController(this.input_data).result;
+                this.node_ls=new SearchController(this.input_data).result_node_ls;
                 this.index=0;
                 this.render();
             },100)
@@ -101,11 +102,11 @@ export default {
          * 根据index指向的状态渲染cell
          */
         render(){
-            if(this.status_ls.length==0){
+            if(this.node_ls.length==0){
                 this.$message.error("没有找到解");
                 return;
             }
-            let s=this.status_ls[this.index];
+            let s=this.node_ls[this.index];
 
             for(let i in s.data){
                 let t=s.data[i]
@@ -129,7 +130,7 @@ export default {
             }
         },
         next(){
-            if(this.index<this.status_ls.length-1){
+            if(this.index<this.node_ls.length-1){
                 this.index++;
                 this.render()
             }

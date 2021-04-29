@@ -1,5 +1,6 @@
 {
-	"include": ["src/**/*"],
+	"include": ["src/Heap.ts"],
+//	"include": ["src/**/*"],
 	"compilerOptions": {
 		"module": "commonjs",
 		"target": "ES6",

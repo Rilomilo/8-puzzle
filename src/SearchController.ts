@@ -1,62 +1,89 @@
-import Status from "./Status"
+import Node from "./Node"
+import Heap from "./Heap";
 
 export default class SearchController{
-    private open_ls:Status[]=[];
-    private visited_ls:Status[]=[];
-    private target: Status  | undefined;
-    private result_ls:Status[]=[];
+    private open:Heap=new Heap();
+    private closed:Map<number,Node>=new Map<number, Node>();
+    private status:number[]=[]; // 当前状态
+    // @ts-ignore
+    private z:number; // 空位下标
+    private offset:number[]=[-3,-1,1,3];
+    public result_node_ls:Node[]=[];
 
     constructor(data:number[]) {
-        this.search(new Status(data,0,null));
+        let node=new Node(data,0,null);
+        this.open.push(node);
+        this.search();
     }
 
-    // private isVisited(s:Status):boolean{
-    //
+    // private reArrangeOpenList(){
+    //     this.open.sort((a,b)=>{
+    //         return a.f-b.f;
+    //     })
     // }
 
-    private reArrangeOpenList(){
-        this.open_ls.sort((a,b)=>{
-            return a.f-b.f;
-        })
-    }
-
-    private calculateResult(s:Status){
-        if(s && s.parent_status){
+    private calculateResult(s:Node){
+        if(s.parent_status){
             this.calculateResult(s.parent_status);
         }
-        this.result_ls.push(s);
+        this.result_node_ls.push(s);
     }
 
-    public search(s0:Status){
-        this.open_ls.push(s0);
-
-        while (this.open_ls.length!=0){
-            let s=this.open_ls.shift()!;
-            // s.print()
-            // 如果后面搜出了前面已经出现过了的状态，那么其f值一定>=前面的f值
-            // if(this.isVisited(s)) continue;
-
-            for (let r=1;r<=3;r++){
-                for (let c=1;c<=3;c++){
-                    if(s.findZero(r,c)!=null){
-                        let s1=s.move(r,c);
-                        this.open_ls.push(s1);
-                        if(s1.isTargetStatus()){
-                            this.target=s1;
-                            return;
-                        }
-                    }
-                }
+    /**
+     * 将节点状态读取为当前状态
+     * @param n
+     */
+    private load(n:Node){
+        for(let i=0;i<9;i++){
+            this.status[i]=n.data[i];
+            if(this.status[i]==0){
+                this.z=i;
             }
-            this.reArrangeOpenList();
         }
     }
 
-    get result():Status[]{
-        if(this.result_ls.length==0){
-            this.calculateResult(this.target!);
-        }
-        return this.result_ls;
+    private swap(i:number,j:number){
+        let t=this.status[i];
+        this.status[i]=this.status[j];
+        this.status[j]=t;
     }
 
+    /**
+     * 启发式搜索
+     */
+    public search(){
+        while (!this.open.empty()){
+            let node=this.open.pop()!;
+            // node.print();
+            // console.log("list_length=",this.open.length);
+
+            if(node.f==node.depth){
+                this.calculateResult(node);
+                break;
+            }
+
+            this.load(node);
+
+            for(let i=0;i<4;i++){
+                let d=this.z+this.offset[i];
+                if(
+                    d<0 || d>8 || // 不能越界交换
+                    (i==1 || i==2) && Math.floor(this.z/3)!=Math.floor(d/3) // 不能跨行相邻
+                ) continue;
+                this.swap(this.z,d);
+                let t=Node.dump(this.status);
+
+                if(this.closed.get(t)==undefined || this.closed.get(t)!.depth>node.depth+1){
+                    let node1=new Node(this.status,node.depth+1,node);
+                    this.open.push(node1);
+                    // console.log("pushed",node1);
+                    this.closed.set(t,node1);
+                }
+
+                this.swap(this.z,d);
+            }
+
+            // this.reArrangeOpenList();
+        }
+    }
 }
