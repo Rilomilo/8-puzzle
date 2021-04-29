@@ -1,0 +1,15 @@
+{
+	"include": ["src/**/*"],
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "ES6",
+		"strict": true,
+		"outDir": "dist",
+		"experimentalDecorators": true,
+		"sourceMap": true
+//		"allowJs": true
+	},
+	"exclude": [
+		"node_modules"
+	]
+}

@@ -1,0 +1,56 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+#app {
+  margin: 100px auto;
+  width: 370px;
+}
+#app .mode-panel {
+  text-align: center;
+  margin: 20px;
+}
+#app .table {
+  position: relative;
+  height: 340px;
+  width: 340px;
+  padding: 15px;
+  background-color: #bbada0;
+  border-radius: 6px;
+  color: #776e65;
+  font-size: 50px;
+  font-weight: bold;
+  display: flex;
+}
+#app .table .cell {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  background-color: #eee4da;
+  border-radius: 3px;
+  transition: all 500ms;
+}
+#app .table .cell input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  background-color: transparent;
+  font-size: 50px;
+  text-align: center;
+  color: #776e65;
+  font-weight: bold;
+}
+#app .table .cell.blank {
+  background-color: rgba(238, 228, 218, 0.35);
+}
+#app .button-panel {
+  margin-top: 20px;
+  text-align: center;
+}
+/*# sourceMappingURL=./style.css.map */
