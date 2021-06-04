@@ -1,13 +1,8 @@
-interface Pos {
-    r:number,
-    c:number
-}
-
 export default class Node{
-    public data:number[];
-    public depth:number; //g
-    private _f: number | undefined;
-    public parent_status:Node|null;
+    public data:number[]; // 用一个一维数组存储当前的状态
+    public depth:number; //g，搜索深度
+    private _f: number | undefined; // 估价函数的值
+    public parent_status:Node|null; // 该状态的父状态，也就是该状态的上一个状态
 
     constructor(data: number[], depth: number, parent: Node | null) {
         this.data=Array.from(data);

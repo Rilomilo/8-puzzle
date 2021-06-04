@@ -15,8 +15,8 @@ module.exports = {
         path: resolve(__dirname, 'dist'),
         // chunkFilename:'js/[name]-chunk-[hash].js'
     },
-    mode: 'development',
-    // mode:'production',
+    // mode: 'development',
+    mode:'production',
     // devtool: 'cheap-module-eval-source-map',
     devtool:false,
     resolve: {
@@ -36,10 +36,10 @@ module.exports = {
             maxSize:1024*1024 //1MB
         }
     },
-    // externals: {
-	//     'vue': 'Vue',
-    //     'element-ui': 'Element'
-	// },
+    externals: {
+	    'vue': 'Vue',
+        'element-ui': 'Element'
+	},
     module: {
         rules: [{
             test: /\.ts$/,
