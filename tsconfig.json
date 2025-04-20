@@ -1,5 +1,4 @@
 {
-//	"include": ["src/Heap.ts"],
 	"include": ["src/**/*"],
 	"compilerOptions": {
 		"module": "commonjs",
@@ -8,7 +7,6 @@
 		"outDir": "dist",
 		"experimentalDecorators": true,
 		"sourceMap": true
-//		"allowJs": true
 	},
 	"exclude": [
 		"node_modules"

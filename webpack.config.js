@@ -10,12 +10,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 module.exports = {
     entry: './src/main.js',
     output: {
-        // filename: 'js/[name]-[contenthash:10].js',
         filename: 'js/[name]-[hash].js',
         path: resolve(__dirname, 'dist'),
-        // chunkFilename:'js/[name]-chunk-[hash].js'
     },
-    // mode: 'development',
     mode:'production',
     // devtool: 'cheap-module-eval-source-map',
     devtool:false,
@@ -93,9 +90,6 @@ module.exports = {
             analyzerPort:8888,
             openAnalyzer:false
         }),
-        // new webpack.DllReferencePlugin({
-        //     manifest:resolve(__dirname,'dll/manifest.json')
-        // }),
         new AddAssetHtmlPlugin([
             {
                 filepath: resolve('./dll/*.js'),
